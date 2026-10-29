@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CaseZero — Algorithmic Crime Investigation</title>
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="noir-theme">
+
+  <!-- 1. TITLE SCREEN OVERLAY -->
+  <div id="titleScreen" class="title-screen">
+    <div class="title-content">
+      <div class="logo-lockup">
+        <img src="assets/img/logo.svg" alt="CaseZero Logo" class="brand-logo" onerror="this.style.display='none'">
+        <div class="brand-text">
+          <h1 class="brand-title">CASEZERO</h1>
+          <div class="brand-sub typewriter">ALGORITHMIC FORENSIC INTELLIGENCE</div>
+        </div>
+      </div>
+
+      <div class="caution-tape">
+        <span>CRIME SCENE // DO NOT CROSS // DSA INVESTIGATIVE DIVISION // CASEZERO // SECURE AREA</span>
+      </div>
+
+      <div class="cases-selection-area">
+        <h2 class="section-title noir-display">SELECT ACTIVE DOSSIER</h2>
+        <div id="caseCardsGrid" class="cases-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ONBOARDING WALKTHROUGH OVERLAY -->
+  <div id="onboardingOverlay" class="modal-overlay hidden">
+    <div class="onboarding-card">
+      <div class="onboarding-header">
+        <span class="tag">INVESTIGATOR PROTOCOL</span>
+        <button id="btnCloseOnboarding" class="icon-btn" title="Close">
+          <svg viewBox="0 0 24 24" class="svg-icon"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="onboarding-step" id="onboardingStep1">
+        <div class="step-num">01 // COLLECT EVIDENCE</div>
+        <div class="step-desc">Pursue leads in the Decision Tree. Each inquiry yields physical clues, access records, or witness statements while consuming Action Points.</div>
+      </div>
+
+      <div class="onboarding-step" id="onboardingStep2">
+        <div class="step-num">02 // EXPOSE LIES & CLEAR SUSPECTS</div>
+        <div class="step-desc">Cross-reference clues using Set Theory. Beware of planted forgeries that produce logical contradictions. Debunk them to restore truth.</div>
+      </div>
+
+      <div class="onboarding-step" id="onboardingStep3">
+        <div class="step-num">03 // NAME THE CULPRIT</div>
+        <div class="step-desc">Trace the graph collusion network with BFS, verify alibis using Binary Search, and issue an arrest warrant before your AP runs out.</div>
+      </div>
+
+      <div class="onboarding-actions">
+        <button id="btnSkipOnboarding" class="btn-secondary">Skip Protocol</button>
+        <button id="btnDismissOnboarding" class="btn-primary">Acknowledge & Begin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MAIN GAME SCREEN -->
+  <div id="gameScreen" class="game-screen hidden">
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+      <div class="top-left">
+        <img src="assets/img/logo.svg" alt="Logo" class="top-logo">
+        <span class="top-title">CASEZERO</span>
+        <span class="separator">/</span>
+        <span id="topCaseName" class="top-case-name">The Phantom Key</span>
+      </div>
+
+      <div class="top-center">
+        <button id="btnReturnToCases" class="btn-text">
+          <svg viewBox="0 0 24 24" class="svg-icon"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Case Files
+        </button>
+        <button id="btnOpenHelp" class="btn-text">
+          <svg viewBox="0 0 24 24" class="svg-icon"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Protocol
+        </button>
+      </div>
+
+      <div class="top-right">
+        <div class="ap-block" title="Action Points remaining">
+          <span class="ap-label">AP:</span>
+          <div id="apPipsRow" class="ap-pips-row">
+            <!-- 12 Pips rendered via JS -->
+          </div>
+          <span id="apNumberText" class="ap-count-text">12/12</span>
+        </div>
+        <button id="btnIssueWarrant" class="btn-warrant">
+          <svg viewBox="0 0 24 24" class="svg-icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          ISSUE WARRANT
+        </button>
+      </div>
+    </header>
+
+    <!-- Always-Visible Suspect Strip directly below top bar -->
+    <section class="suspect-strip-container">
+      <div class="strip-header">
+        <span class="strip-title">SUSPECT POOL MONITOR:</span>
+        <span id="stripViableCount" class="strip-count">6 Viable</span>
+      </div>
+      <div id="suspectStrip" class="suspect-strip">
+        <!-- Live Suspect Thumbnails with CLEARED stamps -->
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-tab-btn active" data-tab="suspects">
+        <svg viewBox="0 0 24 24" class="svg-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Suspects
+      </button>
+      <button class="nav-tab-btn" data-tab="connections">
+        <svg viewBox="0 0 24 24" class="svg-icon"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><line x1="8.5" y1="7.5" x2="15.5" y2="16.5"/><line x1="8.5" y1="6" x2="15.5" y2="6"/></svg>
+        Connections
+      </button>
+      <button class="nav-tab-btn" data-tab="leads">
+        <svg viewBox="0 0 24 24" class="svg-icon"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+        Leads
+      </button>
+      <button class="nav-tab-btn" data-tab="evidence">
+        <svg viewBox="0 0 24 24" class="svg-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        Evidence
+      </button>
+      <button class="nav-tab-btn" data-tab="alibi">
+        <svg viewBox="0 0 24 24" class="svg-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Alibi Check
+      </button>
+      <button class="nav-tab-btn" data-tab="accuse">
+        <svg viewBox="0 0 24 24" class="svg-icon"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Accuse
+      </button>
+    </nav>
+
+    <!-- Tab Viewports -->
+    <main class="tabs-viewport">
+
+      <!-- TAB 1: SUSPECTS (HASHMAP) -->
+      <section id="tab-suspects" class="tab-pane active">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Review suspect profiles and search traits via Trie autocomplete; dossiers are stored in an O(1) Custom HashMap.</p>
+          <button class="btn-hood" data-tab="suspects">Under the Hood</button>
+        </div>
+
+        <div class="suspects-search-bar">
+          <div class="search-input-wrap">
+            <svg viewBox="0 0 24 24" class="svg-icon search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="trieSearchInput" placeholder="Trie Search: Type trait, weapon, or role (e.g. Left-Handed, Tier 3, Aris)..." autocomplete="off">
+            <div id="trieSuggestions" class="trie-suggestions hidden"></div>
+          </div>
+        </div>
+
+        <div id="suspectsGrid" class="suspects-cards-grid">
+          <!-- Suspect cards populated via JS -->
+        </div>
+      </section>
+
+      <!-- TAB 2: CONNECTIONS (GRAPH) -->
+      <section id="tab-connections" class="tab-pane">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Analyze the suspect relationship network. Click two suspects to calculate the BFS shortest collusion path.</p>
+          <div class="board-actions">
+            <button id="btnToggleSyndicates" class="btn-secondary">Show Syndicates</button>
+            <button id="btnResetCorkboard" class="btn-secondary">Reset Pins</button>
+            <button class="btn-hood" data-tab="connections">Under the Hood</button>
+          </div>
+        </div>
+
+        <div class="corkboard-wrapper">
+          <canvas id="corkboardCanvas"></canvas>
+          <div class="corkboard-legend">
+            <span class="legend-title">YARN LEGEND:</span>
+            <span class="leg-item"><span class="leg-line solid"></span> COLLEAGUE</span>
+            <span class="leg-item"><span class="leg-line dashed"></span> CONSPIRACY</span>
+            <span class="leg-item"><span class="leg-line dotted"></span> DEBT / BLACKMAIL</span>
+            <span class="leg-item"><span class="leg-line path"></span> BFS COLLUSION PATH</span>
+          </div>
+          <div id="bfsPathBanner" class="bfs-path-banner hidden">
+            <!-- Path details rendered here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: LEADS (TREE) -->
+      <section id="tab-leads" class="tab-pane">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Explore hierarchical crime scene leads. Prerequisites unlock subsequent forensic inquiries.</p>
+          <div class="tree-controls">
+            <div class="traversal-toggle">
+              <span class="toggle-label">Sequence:</span>
+              <button id="btnDeepDive" class="toggle-btn active">Deep Dive (DFS)</button>
+              <button id="btnBroadSurvey" class="toggle-btn">Broad Survey (BFS)</button>
+            </div>
+            <button class="btn-hood" data-tab="leads">Under the Hood</button>
+          </div>
+        </div>
+
+        <div class="tree-canvas-wrapper" id="treeContainer">
+          <!-- Rendered by tree.js -->
+        </div>
+      </section>
+
+      <!-- TAB 4: EVIDENCE (SETS) -->
+      <section id="tab-evidence" class="tab-pane">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Filter viable suspects by intersecting verified clue sets. Identify planted lies before making an arrest.</p>
+          <button class="btn-hood" data-tab="evidence">Under the Hood</button>
+        </div>
+
+        <div class="sets-visualizer-card">
+          <div class="sets-math-header">
+            <span class="math-formula">VIABLE = (UNIVERSE \ ELIMINATED) ∩ ⋂(ACTIVE CLUES)</span>
+            <span id="activeCluesBadge" class="math-badge">0 Clues Active</span>
+          </div>
+          <div id="setStepsLog" class="set-steps-log">
+            <!-- Step log populated via JS -->
+          </div>
+        </div>
+
+        <div id="cluesGrid" class="clues-grid">
+          <!-- Clue cards rendered via JS -->
+        </div>
+      </section>
+
+      <!-- TAB 5: ALIBI CHECK (BINARY SEARCH) -->
+      <section id="tab-alibi" class="tab-pane">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Verify suspect movements against chronological access logs using Binary Search in O(log N) iterations.</p>
+          <button class="btn-hood" data-tab="alibi">Under the Hood</button>
+        </div>
+
+        <div class="alibi-controls-bar">
+          <div class="control-group">
+            <label for="selectAlibiSuspect">Select Suspect:</label>
+            <select id="selectAlibiSuspect" class="styled-select"></select>
+          </div>
+          <div class="control-group">
+            <label for="inputAlibiTime">Target Timestamp:</label>
+            <input type="text" id="inputAlibiTime" value="23:45" class="styled-input">
+          </div>
+          <div class="alibi-btn-group">
+            <button id="btnStepBinarySearch" class="btn-secondary">Step (O(log N))</button>
+            <button id="btnAutoBinarySearch" class="btn-primary">Auto Verify (-1 AP)</button>
+          </div>
+        </div>
+
+        <div id="alibiTraceBox" class="alibi-trace-card hidden">
+          <!-- Step trace status -->
+        </div>
+
+        <div class="logs-table-wrap">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Pointer</th>
+                <th>Time</th>
+                <th>Suspect</th>
+                <th>Security Event</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody">
+              <!-- Logs populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 6: ACCUSE (VERDICT) -->
+      <section id="tab-accuse" class="tab-pane">
+        <div class="tab-objective-bar">
+          <p class="tab-objective">Submit your formal indictment. Accusing the wrong suspect or leaving lies unresolved penalizes your score.</p>
+          <button class="btn-hood" data-tab="accuse">Under the Hood</button>
+        </div>
+
+        <div class="accusal-form-card">
+          <h3 class="form-title noir-display">FORMAL INDICTMENT</h3>
+          <div class="form-row">
+            <div class="form-col">
+              <label>1. Select Primary Culprit (Required):</label>
+              <div id="culpritSelectionGrid" class="selection-grid">
+                <!-- Selectable portrait cards -->
+              </div>
+            </div>
+            <div class="form-col">
+              <label>2. Select Inside Conspirator / Accomplice (Optional):</label>
+              <div id="accompliceSelectionGrid" class="selection-grid">
+                <!-- Selectable portrait cards -->
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button id="btnExecuteAccusal" class="btn-danger-large">
+              EXECUTE ARREST WARRANT
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 4. FULL-SCREEN CONTRADICTION SIREN OVERLAY -->
+  <div id="sirenOverlay" class="siren-overlay hidden">
+    <div class="siren-box">
+      <div class="siren-header">
+        <span class="siren-alert-tag">CRITICAL LOGICAL CONTRADICTION</span>
+        <h2 class="siren-title">THE CANDIDATE POOL IS EMPTY (∅)</h2>
+        <p class="siren-subtitle">Active clues point to mutually exclusive traits. A suspect planted a fabricated statement. Pick which clue to expose as a forgery.</p>
+      </div>
+
+      <div id="sirenCardsRow" class="siren-cards-row">
+        <!-- Conflicting clues injected here -->
+      </div>
+
+      <div class="siren-footer">
+        <span class="siren-warning">Warning: Falsely debunking verified evidence costs 1 AP.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. VERDICT OVERLAY -->
+  <div id="verdictOverlay" class="modal-overlay hidden">
+    <div class="verdict-card">
+      <div id="verdictStamp" class="verdict-stamp">CONVICTION SECURED</div>
+      <h2 id="verdictTitle" class="verdict-headline noir-display">CASE CLOSED</h2>
+      <p id="verdictNarrative" class="verdict-narrative"></p>
+
+      <div class="verdict-breakdown">
+        <div class="breakdown-row">
+          <span>Prime Culprit (+500):</span>
+          <strong id="vCulpritScore">0 Pts</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>Accomplice Identification (+250):</span>
+          <strong id="vAccompliceScore">0 Pts</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>Planted Forgery Debunked (+250):</span>
+          <strong id="vDebunkScore">0 Pts</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>Efficiency Bonus (Remaining AP x 50):</span>
+          <strong id="vApScore">0 Pts</strong>
+        </div>
+        <div class="breakdown-divider"></div>
+        <div class="breakdown-row total-row">
+          <span>Total Deduction Score:</span>
+          <strong id="vTotalScore">0 Pts</strong>
+        </div>
+        <div class="rank-row">
+          <span>Detective Rank:</span>
+          <strong id="vRankTitle" class="rank-title">Master Algorithmic Sleuth</strong>
+        </div>
+      </div>
+
+      <div class="verdict-actions">
+        <button id="btnReplayCase" class="btn-secondary">Replay Case</button>
+        <button id="btnNextCase" class="btn-primary">Next Case</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. SUSPECT DOSSIER MODAL -->
+  <div id="dossierModal" class="modal-overlay hidden">
+    <div class="dossier-card">
+      <div class="dossier-header">
+        <div class="header-left">
+          <span id="dossierIdBadge" class="code-badge">S1</span>
+          <h2 id="dossierName" class="dossier-name">Suspect Name</h2>
+        </div>
+        <button id="btnCloseDossier" class="icon-btn">
+          <svg viewBox="0 0 24 24" class="svg-icon"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="dossier-body">
+        <div class="dossier-portrait-wrap">
+          <img id="dossierImg" src="assets/img/suspects/placeholder.svg" alt="Suspect" class="dossier-img" onerror="this.src='assets/img/suspects/placeholder.svg'">
+          <span id="dossierRole" class="dossier-role">Chief Architect</span>
+        </div>
+        <div class="dossier-details">
+          <div class="dossier-field">
+            <span class="field-label">KNOWN TRAITS:</span>
+            <span id="dossierTraits" class="field-val">Left-Handed, Tier 3</span>
+          </div>
+          <div class="dossier-field">
+            <span class="field-label">STATED ALIBI:</span>
+            <p id="dossierAlibi" class="field-val">Asleep in on-call room.</p>
+          </div>
+          <div class="dossier-field">
+            <span class="field-label">SUSPECT MOTIVE:</span>
+            <p id="dossierMotive" class="field-val">Disputed patents.</p>
+          </div>
+          <div class="dossier-field">
+            <span class="field-label">INVESTIGATOR NOTES:</span>
+            <p id="dossierNotes" class="field-val">Elena manages security keys.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dossier-footer">
+        <button id="btnToggleEliminateDossier" class="btn-secondary">Cross Off Suspect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. SLIM "UNDER THE HOOD" SIDE DRAWER -->
+  <div id="hoodDrawer" class="hood-drawer hidden">
+    <div class="hood-header">
+      <div class="hood-title-group">
+        <span class="hood-tag">UNDER THE HOOD</span>
+        <h4 id="hoodDsName" class="hood-ds-name">Custom HashMap</h4>
+      </div>
+      <button id="btnCloseHood" class="icon-btn">
+        <svg viewBox="0 0 24 24" class="svg-icon"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="hood-body">
+      <div class="hood-row">
+        <p id="hoodExplanation" class="hood-explanation">Dossiers retrieved in O(1) average time via polynomial rolling hash.</p>
+        <span id="hoodComplexityBadge" class="complexity-badge">O(1) Avg</span>
+      </div>
+      <div id="hoodLiveVisual" class="hood-live-visual">
+        <!-- Live mini visualization -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/corkboard.js"></script>
+  <script src="js/tree.js"></script>
+  <script src="js/binsearch.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

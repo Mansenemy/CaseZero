@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#080808" stroke="#1f1f1f" stroke-width="2" rx="6"/>
+  <!-- Corner Forensic Crop Marks -->
+  <path d="M 14 32 L 14 14 L 32 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 32 L 386 14 L 368 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 14 268 L 14 286 L 32 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 268 L 386 286 L 368 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+
+  
+        <!-- Heavy Vault Door Airlock -->
+        <circle cx="200" cy="140" r="85" fill="#080808" stroke="#333" stroke-width="5"/>
+        <circle cx="200" cy="140" r="70" fill="#040404" stroke="#ff1e2d" stroke-width="2.5" stroke-dasharray="8 4"/>
+        <circle cx="200" cy="140" r="28" fill="#141414" stroke="#ff1e2d" stroke-width="3"/>
+        <line x1="200" y1="95" x2="200" y2="185" stroke="#ff1e2d" stroke-width="5" stroke-linecap="round"/>
+        <line x1="155" y1="140" x2="245" y2="140" stroke="#ff1e2d" stroke-width="5" stroke-linecap="round"/>
+        
+
+  <!-- Forensic Tag Footer -->
+  <rect x="16" y="252" width="368" height="32" fill="#030303" stroke="#ff1e2d" stroke-width="1"/>
+  <text x="30" y="273" fill="#ffffff" font-family="'Courier New', monospace" font-size="11" font-weight="bold" letter-spacing="1">
+    EXHIBIT // VAULT AIRLOCK SEAL
+  </text>
+</svg>

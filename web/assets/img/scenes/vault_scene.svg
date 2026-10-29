@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <radialGradient id="sceneSpot" cx="50%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#1c070a"/>
+      <stop offset="50%" stop-color="#080808"/>
+      <stop offset="100%" stop-color="#020202"/>
+    </radialGradient>
+    <pattern id="sceneGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#0f0f0f" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Deep pitch black base -->
+  <rect width="800" height="450" fill="#020202"/>
+  <rect width="800" height="450" fill="url(#sceneSpot)"/>
+  <rect width="800" height="450" fill="url(#sceneGrid)" opacity="0.6"/>
+
+  
+        <!-- Heavy Breached Vault Circular Blast Door -->
+        <circle cx="400" cy="225" r="130" fill="#080808" stroke="#222" stroke-width="6"/>
+        <circle cx="400" cy="225" r="105" fill="#030303" stroke="#ff1e2d" stroke-width="3" stroke-dasharray="12 6"/>
+        <circle cx="400" cy="225" r="45" fill="#141414" stroke="#ff1e2d" stroke-width="4"/>
+
+        <!-- Blast lock bolts (severed) -->
+        <line x1="400" y1="160" x2="400" y2="290" stroke="#ff1e2d" stroke-width="6" stroke-linecap="round"/>
+        <line x1="335" y1="225" x2="465" y2="225" stroke="#ff1e2d" stroke-width="6" stroke-linecap="round"/>
+
+        <!-- Sparks / Laser Grid cuts -->
+        <path d="M 240 180 L 290 260 L 260 280" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+        <circle cx="290" cy="260" r="3" fill="#ffffff"/>
+
+        <!-- Police Chalk Evidence Marker & Body Outline -->
+        <g stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity="0.65">
+          <ellipse cx="200" cy="360" rx="30" ry="12"/>
+          <path d="M 180 370 L 140 400 L 120 380"/>
+          <path d="M 220 370 L 260 410"/>
+        </g>
+        <polygon points="110,340 130,340 135,365 105,365" fill="#ff1e2d"/>
+        <text x="120" y="358" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">A</text>
+        
+
+  <!-- Crime scene tape banner at bottom -->
+  <g>
+    <rect x="0" y="416" width="800" height="34" fill="#050505"/>
+    <line x1="0" y1="416" x2="800" y2="416" stroke="#ff1e2d" stroke-width="2.5"/>
+    <text x="30" y="438" fill="#ff1e2d" font-family="'Courier New', monospace" font-size="12" font-weight="bold" letter-spacing="3">
+      METRO CRIME DIVISION // CASEZERO PROTOCOL // SECURE FORENSIC EVIDENCE
+    </text>
+  </g>
+
+  <!-- Headline Header (Neo-Noir tracked style) -->
+  <text x="40" y="72" fill="#ffffff" font-family="Georgia, serif" font-size="28" font-weight="bold" letter-spacing="3">CYBERDYNE QUANTUM VAULT</text>
+  <line x1="40" y1="84" x2="320" y2="84" stroke="#ff1e2d" stroke-width="3.5"/>
+  <text x="40" y="108" fill="#888888" font-family="'Courier New', monospace" font-size="12" letter-spacing="2">SECTOR 7 AIR-GAPPED CHAMBER</text>
+</svg>

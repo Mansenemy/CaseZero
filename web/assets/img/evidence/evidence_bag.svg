@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#080808" stroke="#1f1f1f" stroke-width="2" rx="6"/>
+  <!-- Corner Forensic Crop Marks -->
+  <path d="M 14 32 L 14 14 L 32 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 32 L 386 14 L 368 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 14 268 L 14 286 L 32 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 268 L 386 286 L 368 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+
+  
+        <!-- Sealed Forensic Evidence Bag with Red Tamper Tape -->
+        <rect x="120" y="45" width="160" height="195" rx="4" fill="#0d0d0d" stroke="#555" stroke-width="2" stroke-dasharray="6 3"/>
+        <rect x="135" y="60" width="130" height="32" fill="#8b0000" stroke="#ff1e2d" stroke-width="1.5"/>
+        <text x="200" y="81" fill="#ffffff" font-family="'Courier New', monospace" font-size="12" font-weight="bold" text-anchor="middle">TAMPER EVIDENCE</text>
+        <line x1="140" y1="120" x2="260" y2="120" stroke="#333" stroke-width="1.5"/>
+        <line x1="140" y1="145" x2="260" y2="145" stroke="#333" stroke-width="1.5"/>
+        <text x="145" y="138" fill="#ff1e2d" font-family="'Courier New', monospace" font-size="11">PLANTED WITNESS LOG</text>
+        
+
+  <!-- Forensic Tag Footer -->
+  <rect x="16" y="252" width="368" height="32" fill="#030303" stroke="#ff1e2d" stroke-width="1"/>
+  <text x="30" y="273" fill="#ffffff" font-family="'Courier New', monospace" font-size="11" font-weight="bold" letter-spacing="1">
+    EXHIBIT // TAMPERED DEPOSITION LOG
+  </text>
+</svg>

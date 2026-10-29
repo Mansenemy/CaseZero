@@ -1,0 +1,2025 @@
+/* ==========================================================================
+   CaseZero — Crime-Noir Stylesheet v2
+   -------------------------------------------------------------------------
+   Palette:
+     Background    #050505 / #0a0a0a
+     Panels        #0d0d0d / #111111
+     Cards         #0f0f0f / #131313
+     Blood Red     #c9111f (base)  #e01c2a (bright)  #6b0a12 (dark)
+     Text          #dedad6 (main)  #4a4a4a (muted)  #282828 (dark)
+   Typography (offline-safe system stacks):
+     --font-noir   : Neo-noir display / heading (tracked serif)
+     --font-ransom : Ransom / accent (weighted mono mix)
+     --font-type   : Typewriter (Courier-family mono)
+     --font-code   : Tech / data (Consolas-family mono)
+     --font-sans   : Body
+   ========================================================================== */
+
+:root {
+  /* --- Color tokens ---------------------------------------------------- */
+  --bg-main:        #050505;
+  --bg-panel:       #0d0d0d;
+  --bg-card:        #0f0f0f;
+  --bg-card-hover:  #161616;
+
+  --red-bright:     #e01c2a;
+  --red-blood:      #c9111f;
+  --red-dark:       #6b0a12;
+  --red-glow:       rgba(224, 28, 42, 0.30);
+  --red-deep-glow:  rgba(224, 28, 42, 0.55);
+
+  --text-main:      #dedad6;
+  --text-muted:     #4a4a4a;
+  --text-dim:       #2e2e2e;
+
+  --border-dim:     #1a1a1a;
+  --border-mid:     #272727;
+  --border-red:     #6b0a12;
+
+  /* --- Typography stacks (all system / offline-safe) ------------------- */
+  /* Neo-noir display: tracked, uppercase Georgia feels like old detective type */
+  --font-noir:   Georgia, 'Times New Roman', Times, serif;
+  /* Typewriter: Courier family for "printed on paper" feel */
+  --font-type:   'Courier New', Courier, monospace;
+  /* Tech/code readouts: Consolas on Windows, JetBrains/Hack fallback */
+  --font-code:   Consolas, 'Courier New', 'Lucida Console', monospace;
+  /* Body / UI chrome */
+  --font-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  /* --- Space scale ---------------------------------------------------- */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+}
+
+/* =========================================================================
+   Reset
+   ========================================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* =========================================================================
+   Crime-Noir Typography Classes
+   ========================================================================= */
+
+/* NEO-NOIR DISPLAY — tracked uppercase serif; use for brand/section titles */
+.noir-display {
+  font-family: var(--font-noir);
+  text-transform: uppercase;
+  letter-spacing: 7px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* TYPEWRITER LABEL — for clue/evidence titles, objective text, field labels */
+.typewriter {
+  font-family: var(--font-type);
+  letter-spacing: 1.5px;
+  font-size: 0.85em;
+}
+
+/* BLOOD TITLE — glowing crimson header for alert/siren contexts */
+.blood-title {
+  font-family: var(--font-noir);
+  color: var(--red-bright);
+  text-shadow:
+    2px 2px 0 #3a0007,
+    0 0 18px rgba(224, 28, 42, 0.8),
+    0 0 40px rgba(224, 28, 42, 0.35);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  transform: rotate(-0.8deg);
+}
+
+/* RANSOM MIX — alternating mono/serif characters for ransom-note feel */
+.ransom-mix {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 2px;
+}
+.ransom-mix .rm-s {  /* serif chunk */
+  font-family: var(--font-noir);
+  font-weight: 700;
+  font-size: 1.05em;
+  display: inline-block;
+  transform: rotate(-1.2deg);
+  letter-spacing: 3px;
+}
+.ransom-mix .rm-m {  /* mono chunk */
+  font-family: var(--font-type);
+  font-weight: 400;
+  font-size: 0.92em;
+  display: inline-block;
+  transform: rotate(0.9deg) translateY(-1px);
+  letter-spacing: 2px;
+}
+
+/* CODE BADGE / TECH READOUT */
+.tech-readout {
+  font-family: var(--font-code);
+  font-size: 0.8em;
+  letter-spacing: 1px;
+  color: var(--text-main);
+}
+
+/* =========================================================================
+   Global Vignette Overlay
+   ========================================================================= */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, transparent 55%, rgba(0,0,0,0.82) 100%);
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* SVG utility icon */
+.svg-icon {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex-shrink: 0;
+}
+
+/* =========================================================================
+   1. TITLE SCREEN
+   ========================================================================= */
+.title-screen {
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-main);
+  background-image:
+    radial-gradient(circle at 70% 15%, rgba(201, 17, 31, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(107, 10, 18, 0.12) 0%, transparent 40%);
+  z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+.title-screen.hidden, .hidden {
+  display: none !important;
+}
+
+.title-content {
+  width: 100%;
+  max-width: 1080px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* --- Logo Lockup -------------------------------------------------------- */
+.logo-lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-logo {
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 0 12px rgba(224, 28, 42, 0.5));
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Brand title — neo-noir display with red glow flicker */
+.brand-title {
+  font-family: var(--font-noir);
+  font-size: 46px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  color: #fff;
+  border-bottom: 2px solid var(--red-bright);
+  padding-bottom: 4px;
+  animation: noirFlicker 7s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(224, 28, 42, 0.4);
+  transform: skewX(-1.5deg);
+  display: inline-block;
+}
+
+@keyframes noirFlicker {
+  0%,  95%, 100% { text-shadow: 0 0 30px rgba(224, 28, 42, 0.4), 2px 0 0 rgba(224,28,42,0.08); }
+  96%            { text-shadow: 0 0 6px  rgba(224, 28, 42, 0.15); }
+  97%            { text-shadow: 0 0 30px rgba(224, 28, 42, 0.4); }
+  98%            { text-shadow: 0 0 2px  rgba(224, 28, 42, 0.05); }
+}
+
+/* Brand sub — typewriter mono tag */
+.brand-sub {
+  font-family: var(--font-type);
+  font-size: 11px;
+  letter-spacing: 3.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* --- Caution Tape ------------------------------------------------------- */
+.caution-tape {
+  background: repeating-linear-gradient(
+    -45deg,
+    #050505,
+    #050505 14px,
+    #6b0a12 14px,
+    #6b0a12 28px
+  );
+  padding: 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid var(--red-blood);
+  border-bottom: 1px solid var(--red-blood);
+}
+
+.caution-tape span {
+  display: inline-block;
+  font-family: var(--font-type);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 3px;
+  padding-left: 20px;
+  text-transform: uppercase;
+}
+
+/* --- Section title (NOIR) ----------------------------------------------- */
+.section-title {
+  font-family: var(--font-noir);
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--text-main);
+  margin-bottom: var(--space-2);
+}
+
+/* --- Case Cards Grid ---------------------------------------------------- */
+.cases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-3);
+}
+
+.case-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+  position: relative;
+}
+
+.case-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(5,5,5,0.95) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.case-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--red-bright);
+  box-shadow: 0 8px 32px rgba(224, 28, 42, 0.28), 0 2px 8px rgba(0,0,0,0.9);
+}
+
+/* Case image thumbnail — noir desaturated */
+.case-thumb {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+  background-color: #080808;
+  filter: grayscale(85%) contrast(115%) brightness(0.82);
+  display: block;
+  transition: filter 0.3s;
+}
+
+.case-card:hover .case-thumb {
+  filter: grayscale(50%) contrast(120%) brightness(0.9);
+}
+
+.case-card-body {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.case-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.case-difficulty {
+  color: var(--red-bright);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.case-suspects-count {
+  color: var(--text-muted);
+}
+
+/* Case card title — neo-noir tracked serif */
+.case-title {
+  font-family: var(--font-noir);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.case-briefing {
+  font-family: var(--font-type);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+.btn-start-case {
+  margin-top: auto;
+  padding: 9px 16px;
+  background-color: var(--red-dark);
+  color: #fff;
+  font-family: var(--font-code);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border: 1px solid var(--red-blood);
+  cursor: pointer;
+  transition: background-color 0.15s, box-shadow 0.15s;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+}
+
+.case-card:hover .btn-start-case {
+  background-color: var(--red-blood);
+  border-color: var(--red-bright);
+  box-shadow: 0 0 12px var(--red-glow);
+}
+
+/* =========================================================================
+   2. TOP BAR
+   ========================================================================= */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #080808;
+  border-bottom: 1px solid var(--border-dim);
+  padding: 10px var(--space-3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.8);
+}
+
+.top-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.top-logo {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 4px rgba(224,28,42,0.4));
+}
+
+/* Top title — mini neo-noir */
+.top-title {
+  font-family: var(--font-noir);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(224,28,42,0.25);
+}
+
+.separator {
+  color: var(--border-mid);
+  font-family: var(--font-type);
+  margin: 0 2px;
+}
+
+/* Case name — typewriter style */
+.top-case-name {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.top-center {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-text {
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  padding: 5px 11px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 2px;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.btn-text:hover {
+  border-color: var(--border-mid);
+  color: var(--text-main);
+}
+
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* --- AP Pips ----------------------------------------------------------- */
+.ap-block {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #050505;
+  padding: 5px 10px;
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+}
+
+.ap-label {
+  font-family: var(--font-code);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--red-bright);
+  text-transform: uppercase;
+}
+
+.ap-pips-row {
+  display: flex;
+  gap: 3px;
+}
+
+.ap-pip {
+  width: 8px;
+  height: 14px;
+  border-radius: 1px;
+  background-color: #161616;
+  border: 1px solid #232323;
+  transition: all 0.2s;
+}
+
+.ap-pip.filled {
+  background-color: var(--red-bright);
+  border-color: #ff3344;
+  box-shadow: 0 0 5px rgba(224, 28, 42, 0.65);
+}
+
+.ap-count-text {
+  font-family: var(--font-code);
+  font-size: 11px;
+  color: var(--text-main);
+  margin-left: 4px;
+  min-width: 42px;
+}
+
+/* --- Issue Warrant Button ---------------------------------------------- */
+.btn-warrant {
+  background-color: var(--red-dark);
+  color: #fff;
+  border: 1px solid var(--red-blood);
+  padding: 7px 14px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+
+.btn-warrant:hover {
+  background-color: var(--red-blood);
+  box-shadow: 0 0 18px var(--red-deep-glow);
+}
+
+/* =========================================================================
+   3. SUSPECT STRIP
+   ========================================================================= */
+.suspect-strip-container {
+  background-color: #060606;
+  border-bottom: 1px solid var(--border-dim);
+  padding: 7px var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  overflow-x: auto;
+}
+
+.strip-header {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+/* Typewriter mono label */
+.strip-title {
+  font-family: var(--font-type);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.strip-count {
+  font-family: var(--font-code);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 1px;
+}
+
+.suspect-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.strip-card {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: opacity 0.2s;
+}
+
+.strip-thumb-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border-mid);
+  position: relative;
+  background-color: #0d0d0d;
+}
+
+.strip-card.viable .strip-thumb-wrap {
+  border-color: var(--red-bright);
+  box-shadow: 0 0 8px rgba(224, 28, 42, 0.35);
+}
+
+.strip-card.cleared .strip-thumb-wrap {
+  filter: grayscale(100%) brightness(40%);
+  border-color: #1a1a1a;
+}
+
+.strip-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* CLEARED stamp */
+.stamp-cleared {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-22deg);
+  font-family: var(--font-type);
+  font-size: 7px;
+  font-weight: 900;
+  color: #fff;
+  background-color: rgba(107, 10, 18, 0.92);
+  border: 1px solid var(--red-bright);
+  padding: 1px 3px;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+/* Strip name — tiny typewriter */
+.strip-name {
+  font-family: var(--font-type);
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   4. NAVIGATION TABS
+   ========================================================================= */
+.nav-tabs {
+  display: flex;
+  background-color: #080808;
+  border-bottom: 1px solid var(--border-dim);
+  padding: 0 var(--space-3);
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.nav-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  padding: 11px 16px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.nav-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.nav-tab-btn.active {
+  color: #fff;
+  border-bottom-color: var(--red-bright);
+  background-color: rgba(224, 28, 42, 0.07);
+}
+
+/* =========================================================================
+   5. TAB PANES & OBJECTIVE BAR
+   ========================================================================= */
+.tabs-viewport {
+  padding: var(--space-3);
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.tab-pane.active {
+  display: flex;
+}
+
+.tab-objective-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-left: 3px solid var(--red-bright);
+  padding: 9px var(--space-2);
+  border-radius: 1px;
+}
+
+/* Tab objective — typewriter feel */
+.tab-objective {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+/* Under the Hood button */
+.btn-hood {
+  background: transparent;
+  border: 1px solid var(--red-dark);
+  color: var(--red-bright);
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.btn-hood:hover {
+  background-color: var(--red-dark);
+  color: #fff;
+}
+
+/* =========================================================================
+   6. TAB 1: SUSPECTS (HASHMAP)
+   ========================================================================= */
+.suspects-search-bar {
+  margin-bottom: var(--space-1);
+}
+
+.search-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+/* Typewriter-style search input */
+#trieSearchInput {
+  width: 100%;
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  color: var(--text-main);
+  padding: 10px 14px 10px 38px;
+  font-family: var(--font-type);
+  font-size: 13px;
+  letter-spacing: 1px;
+  outline: none;
+  border-radius: 1px;
+}
+
+#trieSearchInput::placeholder {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+#trieSearchInput:focus {
+  border-color: var(--red-bright);
+  box-shadow: 0 0 0 1px rgba(224,28,42,0.15);
+}
+
+.trie-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  z-index: 50;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.trie-item {
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border-dim);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.trie-item:hover {
+  background-color: #1a1a1a;
+  color: var(--red-bright);
+}
+
+.suspects-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-2);
+}
+
+.suspect-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.suspect-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--red-bright);
+}
+
+.suspect-card.cleared {
+  opacity: 0.45;
+  filter: grayscale(100%) brightness(0.7);
+}
+
+.suspect-card-img-wrap {
+  width: 100%;
+  height: 200px;
+  background-color: #080808;
+  position: relative;
+}
+
+.suspect-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(60%) contrast(110%);
+  transition: filter 0.25s;
+}
+
+.suspect-card:hover .suspect-card-img {
+  filter: grayscale(30%) contrast(115%);
+}
+
+.suspect-card-info {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Suspect name — noir display */
+.suspect-card-name {
+  font-family: var(--font-noir);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Role — red code label */
+.suspect-card-role {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--red-bright);
+  text-transform: uppercase;
+}
+
+/* Traits — typewriter */
+.suspect-card-traits {
+  font-family: var(--font-type);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+}
+
+/* =========================================================================
+   7. TAB 2: CONNECTIONS CORKBOARD (GRAPH)
+   ========================================================================= */
+.corkboard-wrapper {
+  background-color: #070707;
+  border: 1px solid var(--border-dim);
+  min-height: 540px;
+  position: relative;
+  overflow: hidden;
+}
+
+#corkboardCanvas {
+  width: 100%;
+  height: 540px;
+  display: block;
+}
+
+.corkboard-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(5, 5, 5, 0.9);
+  border: 1px solid var(--border-dim);
+  padding: 7px 12px;
+  border-radius: 1px;
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leg-line {
+  width: 18px;
+  height: 2px;
+  display: inline-block;
+}
+
+.leg-line.solid  { background-color: var(--red-blood); }
+.leg-line.dashed { border-top: 2px dashed var(--red-bright); }
+.leg-line.dotted { border-top: 2px dotted #3a3a3a; }
+.leg-line.path   { background-color: #ff2233; height: 3px; box-shadow: 0 0 6px #ff2233; }
+
+.bfs-path-banner {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  background-color: rgba(107, 10, 18, 0.92);
+  border: 1px solid var(--red-bright);
+  padding: 8px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* =========================================================================
+   8. TAB 3: LEADS TREE
+   ========================================================================= */
+.tree-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.traversal-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  padding: 4px 9px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggle-btn.active {
+  background-color: var(--red-dark);
+  border-color: var(--red-blood);
+  color: #fff;
+}
+
+.tree-canvas-wrapper {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  padding: var(--space-3);
+  overflow-x: auto;
+  min-height: 480px;
+}
+
+.tree-node-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: 3px;
+  padding: var(--space-2);
+  width: 280px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tree-node-card.locked {
+  opacity: 0.38;
+  border-color: #1a1a1a;
+  cursor: not-allowed;
+}
+
+.tree-node-card.available {
+  border-color: var(--red-bright);
+  box-shadow: 0 0 12px rgba(224, 28, 42, 0.25);
+}
+
+.tree-node-card.resolved {
+  background-color: #1a0408;
+  border-color: var(--red-dark);
+}
+
+.node-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+/* Lead node title — typewriter */
+.node-title {
+  font-family: var(--font-type);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.node-desc {
+  font-family: var(--font-type);
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  margin: 5px 0;
+  line-height: 1.35;
+}
+
+.node-cost {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--red-bright);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   9. TAB 4: EVIDENCE & SETS
+   ========================================================================= */
+.sets-visualizer-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  padding: var(--space-2);
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sets-math-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.math-formula {
+  color: var(--red-bright);
+}
+
+.math-badge {
+  background-color: #080808;
+  border: 1px solid var(--border-dim);
+  padding: 2px 8px;
+  color: var(--text-muted);
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.set-steps-log {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  background: #050505;
+  padding: 8px;
+  border-radius: 1px;
+}
+
+.clues-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-2);
+}
+
+.clue-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clue-card.forged {
+  border-color: var(--red-bright);
+  box-shadow: inset 0 0 20px rgba(224,28,42,0.06);
+}
+
+.clue-thumb {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  background-color: #080808;
+  border-radius: 1px;
+  filter: grayscale(70%) contrast(110%);
+}
+
+/* Clue title — typewriter */
+.clue-title {
+  font-family: var(--font-type);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+/* Clue description — readable small type */
+.clue-desc {
+  font-family: var(--font-type);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.clue-chips-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.clue-chip {
+  background: #111;
+  border: 1px solid var(--border-mid);
+  padding: 2px 6px;
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   10. TAB 5: ALIBI CHECK (BINARY SEARCH)
+   ========================================================================= */
+.alibi-controls-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  padding: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.styled-select, .styled-input {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  color: #fff;
+  padding: 5px 10px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+  outline: none;
+}
+
+.alibi-btn-group {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Alibi trace box — code terminal style */
+.alibi-trace-card {
+  background-color: #050505;
+  border: 1px solid var(--red-dark);
+  padding: 12px;
+  border-radius: 2px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  line-height: 1.5;
+}
+
+.logs-table-wrap {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  overflow-x: auto;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.logs-table th, .logs-table td {
+  padding: 7px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.logs-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 9px;
+  background-color: #080808;
+}
+
+.logs-table tr.mid-highlight {
+  background-color: rgba(224, 28, 42, 0.18);
+  color: #fff;
+}
+
+/* =========================================================================
+   11. TAB 6: ACCUSAL FORM
+   ========================================================================= */
+.accusal-form-card {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Form title — neo-noir display */
+.form-title {
+  font-family: var(--font-noir);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #fff;
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 10px;
+  text-shadow: 0 0 20px rgba(224,28,42,0.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.form-col label {
+  display: block;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.selectable-suspect {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+}
+
+.selectable-suspect:hover {
+  border-color: var(--red-bright);
+}
+
+.selectable-suspect.selected {
+  border-color: var(--red-bright);
+  background-color: rgba(224, 28, 42, 0.12);
+  box-shadow: 0 0 12px rgba(224, 28, 42, 0.35);
+}
+
+.select-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 1px;
+  filter: grayscale(60%);
+}
+
+.selectable-suspect:hover .select-thumb,
+.selectable-suspect.selected .select-thumb {
+  filter: grayscale(0%);
+}
+
+.select-name {
+  font-family: var(--font-type);
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-top: 4px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* Execute Warrant — big danger button */
+.btn-danger-large {
+  width: 100%;
+  background-color: var(--red-dark);
+  color: #fff;
+  border: 1px solid var(--red-blood);
+  padding: 14px;
+  font-family: var(--font-noir);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-shadow: 0 0 10px rgba(224,28,42,0.4);
+}
+
+.btn-danger-large:hover {
+  background-color: var(--red-blood);
+  box-shadow: 0 0 24px var(--red-deep-glow);
+  text-shadow: 0 0 18px rgba(224,28,42,0.8);
+}
+
+/* =========================================================================
+   12. CONTRADICTION SIREN OVERLAY
+   ========================================================================= */
+.siren-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 5, 5, 0.94);
+  z-index: 800;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-4);
+  animation: sirenPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes sirenPulse {
+  0%   { box-shadow: inset 0 0 40px rgba(224, 28, 42, 0.2); }
+  100% { box-shadow: inset 0 0 120px rgba(224, 28, 42, 0.75); }
+}
+
+.siren-box {
+  background-color: #0d0d0d;
+  border: 2px solid var(--red-bright);
+  max-width: 760px;
+  width: 100%;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  box-shadow: 0 0 60px rgba(224,28,42,0.35);
+}
+
+/* Siren tag — code mono */
+.siren-alert-tag {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  font-weight: 700;
+}
+
+/* Siren title — blood-title style */
+.siren-title {
+  font-family: var(--font-noir);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  text-shadow:
+    2px 2px 0 #3a0007,
+    0 0 22px rgba(224, 28, 42, 0.9),
+    0 0 50px rgba(224, 28, 42, 0.4);
+  transform: rotate(-0.5deg);
+  display: inline-block;
+}
+
+.siren-subtitle {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.siren-cards-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.siren-clue-card {
+  background: #0f0f0f;
+  border: 1px solid var(--border-mid);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.siren-clue-card h4 {
+  font-family: var(--font-type);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.siren-clue-card p {
+  font-family: var(--font-type);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.btn-expose-lie {
+  margin-top: auto;
+  background: var(--red-dark);
+  color: #fff;
+  border: 1px solid var(--red-blood);
+  padding: 8px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-expose-lie:hover {
+  background: var(--red-bright);
+}
+
+.siren-warning {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* =========================================================================
+   13. VERDICT OVERLAY
+   ========================================================================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(4px);
+  z-index: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3);
+}
+
+.verdict-card {
+  background-color: #0d0d0d;
+  border: 1px solid var(--border-mid);
+  max-width: 520px;
+  width: 100%;
+  padding: var(--space-4);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.9);
+}
+
+/* Verdict stamp — heavy red typewriter */
+.verdict-stamp {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-family: var(--font-type);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  border: 2px solid var(--red-bright);
+  padding: 4px 8px;
+  transform: rotate(-10deg);
+  box-shadow: 0 0 14px rgba(224,28,42,0.5);
+  animation: stampIn 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+@keyframes stampIn {
+  0%   { transform: scale(2.2) rotate(14deg); opacity: 0; }
+  100% { transform: scale(1)   rotate(-10deg); opacity: 1; }
+}
+
+/* Verdict headline — neo-noir */
+.verdict-headline {
+  font-family: var(--font-noir);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(224,28,42,0.2);
+}
+
+/* Verdict narrative — typewriter */
+.verdict-narrative {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Score breakdown — code terminal */
+.verdict-breakdown {
+  background: #060606;
+  border: 1px solid var(--border-dim);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.breakdown-divider {
+  height: 1px;
+  background-color: var(--border-dim);
+  margin: 3px 0;
+}
+
+.total-row {
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+}
+
+.rank-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--red-bright);
+  font-weight: 700;
+}
+
+/* Rank title — noir display */
+.rank-title {
+  font-family: var(--font-noir);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.verdict-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* =========================================================================
+   14. DOSSIER MODAL
+   ========================================================================= */
+.dossier-card {
+  background-color: #0d0d0d;
+  border: 1px solid var(--border-mid);
+  max-width: 580px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.95);
+}
+
+.dossier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2);
+  background-color: #080808;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.code-badge {
+  background-color: var(--red-dark);
+  color: #fff;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  padding: 2px 6px;
+  border-radius: 1px;
+}
+
+/* Dossier name — noir display */
+.dossier-name {
+  font-family: var(--font-noir);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.dossier-body {
+  padding: var(--space-3);
+  display: flex;
+  gap: var(--space-3);
+}
+
+.dossier-portrait-wrap {
+  width: 140px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dossier-img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border: 1px solid var(--border-mid);
+  filter: grayscale(50%) contrast(110%);
+}
+
+.dossier-role {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  text-align: center;
+}
+
+.dossier-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.dossier-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Field label — tiny code caps */
+.field-label {
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Field value — typewriter */
+.field-val {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.dossier-footer {
+  padding: var(--space-2);
+  background: #080808;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* =========================================================================
+   15. UNDER THE HOOD DRAWER
+   ========================================================================= */
+.hood-drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 360px;
+  background-color: #090909;
+  border-left: 1px solid var(--red-dark);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.8);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(0);
+  transition: transform 0.2s ease-out;
+}
+
+.hood-drawer.hidden {
+  transform: translateX(100%);
+  display: flex !important;
+}
+
+.hood-header {
+  padding: var(--space-2);
+  background-color: #060606;
+  border-bottom: 1px solid var(--border-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hood-tag {
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+}
+
+/* Hood DS name — noir display */
+.hood-ds-name {
+  font-family: var(--font-noir);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.hood-body {
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.hood-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Hood explanation — typewriter */
+.hood-explanation {
+  font-family: var(--font-type);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.complexity-badge {
+  background-color: var(--red-dark);
+  color: #fff;
+  font-family: var(--font-code);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 2px 8px;
+  border-radius: 1px;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.hood-live-visual {
+  background: #050505;
+  border: 1px solid var(--border-dim);
+  padding: var(--space-1);
+  border-radius: 2px;
+  min-height: 80px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.8px;
+}
+
+/* =========================================================================
+   16. ONBOARDING MODAL
+   ========================================================================= */
+.onboarding-card {
+  background-color: #0d0d0d;
+  border: 1px solid var(--red-dark);
+  max-width: 480px;
+  width: 100%;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+}
+
+.onboarding-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-dim);
+  padding-bottom: 8px;
+}
+
+.tag {
+  font-family: var(--font-code);
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  font-weight: 700;
+}
+
+.onboarding-step {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Step number — typewriter heading */
+.step-num {
+  font-family: var(--font-type);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red-bright);
+}
+
+/* Step desc — body text */
+.step-desc {
+  font-family: var(--font-type);
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.onboarding-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* =========================================================================
+   17. SHARED BUTTON STYLES
+   ========================================================================= */
+.btn-primary {
+  background-color: var(--red-dark);
+  color: #fff;
+  border: 1px solid var(--red-blood);
+  padding: 7px 16px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: all 0.15s;
+}
+
+.btn-primary:hover {
+  background-color: var(--red-blood);
+  box-shadow: 0 0 12px var(--red-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--text-muted);
+  padding: 7px 14px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: all 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.15s;
+}
+
+.icon-btn:hover {
+  color: #fff;
+}
+
+/* Board action buttons row */
+.board-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================================================================
+   18. REDUCED MOTION
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

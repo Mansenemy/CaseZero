@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <radialGradient id="pg_spot" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#1a060c"/>
+      <stop offset="55%" stop-color="#070707"/>
+      <stop offset="100%" stop-color="#010101"/>
+    </radialGradient>
+    <pattern id="pg_grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#0e0e0e" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#010101"/>
+  <rect width="800" height="450" fill="url(#pg_spot)"/>
+  <rect width="800" height="450" fill="url(#pg_grid)" opacity="0.55"/>
+
+  <!-- Neural web / graph nodes -->
+  <g stroke="#1e1e1e" stroke-width="1" opacity="0.9">
+    <line x1="400" y1="225" x2="550" y2="130"/>
+    <line x1="400" y1="225" x2="270" y2="110"/>
+    <line x1="400" y1="225" x2="600" y2="300"/>
+    <line x1="400" y1="225" x2="200" y2="310"/>
+    <line x1="400" y1="225" x2="460" y2="340"/>
+    <line x1="550" y1="130" x2="270" y2="110"/>
+    <line x1="550" y1="130" x2="600" y2="300"/>
+    <line x1="270" y1="110" x2="200" y2="310"/>
+    <line x1="600" y1="300" x2="460" y2="340"/>
+    <line x1="200" y1="310" x2="460" y2="340"/>
+  </g>
+  <!-- Red accent edges -->
+  <line x1="400" y1="225" x2="550" y2="130" stroke="#c9111f" stroke-width="1.5" opacity="0.7" stroke-dasharray="6 4"/>
+  <line x1="400" y1="225" x2="200" y2="310" stroke="#c9111f" stroke-width="1.5" opacity="0.5" stroke-dasharray="6 4"/>
+
+  <!-- Central unknown node -->
+  <circle cx="400" cy="225" r="38" fill="#0a0a0a" stroke="#c9111f" stroke-width="2.5"/>
+  <text x="400" y="234" fill="#e01c2a" font-family="Georgia, serif" font-size="36" font-weight="bold" text-anchor="middle">?</text>
+
+  <!-- Outer nodes -->
+  <circle cx="550" cy="130" r="18" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1.5"/>
+  <circle cx="270" cy="110" r="18" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1.5"/>
+  <circle cx="600" cy="300" r="18" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1.5"/>
+  <circle cx="200" cy="310" r="18" fill="#0d0d0d" stroke="#c9111f" stroke-width="1.5"/>
+  <circle cx="460" cy="340" r="18" fill="#0d0d0d" stroke="#2a2a2a" stroke-width="1.5"/>
+
+  <!-- Suspect labels obscured (redacted) -->
+  <rect x="530" y="150" width="55" height="8" rx="1" fill="#1a1a1a"/>
+  <rect x="248" y="130" width="45" height="8" rx="1" fill="#1a1a1a"/>
+  <rect x="578" y="320" width="50" height="8" rx="1" fill="#c9111f" opacity="0.35"/>
+  <rect x="178" y="330" width="48" height="8" rx="1" fill="#1a1a1a"/>
+  <rect x="438" y="360" width="52" height="8" rx="1" fill="#1a1a1a"/>
+
+  <!-- Crime scene tape banner -->
+  <rect x="0" y="416" width="800" height="34" fill="#030303"/>
+  <line x1="0" y1="416" x2="800" y2="416" stroke="#c9111f" stroke-width="2"/>
+  <text x="30" y="438" fill="#c9111f" font-family="'Courier New', monospace" font-size="11" font-weight="bold" letter-spacing="3">
+    PROCEDURAL CASE // IDENTITY UNKNOWN // GRAPH ANALYSIS REQUIRED
+  </text>
+
+  <!-- Header -->
+  <text x="40" y="68" fill="#ffffff" font-family="Georgia, serif" font-size="26" font-weight="bold" letter-spacing="3">OPERATION CHIMERA</text>
+  <line x1="40" y1="80" x2="290" y2="80" stroke="#c9111f" stroke-width="3"/>
+  <text x="40" y="104" fill="#555555" font-family="'Courier New', monospace" font-size="11" letter-spacing="2">CLASSIFIED // SEED-RANDOMISED INVESTIGATION</text>
+</svg>

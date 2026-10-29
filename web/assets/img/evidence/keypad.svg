@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#080808" stroke="#1f1f1f" stroke-width="2" rx="6"/>
+  <!-- Corner Forensic Crop Marks -->
+  <path d="M 14 32 L 14 14 L 32 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 32 L 386 14 L 368 14" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 14 268 L 14 286 L 32 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+  <path d="M 386 268 L 386 286 L 368 286" fill="none" stroke="#ff1e2d" stroke-width="2.5"/>
+
+  
+        <!-- Keypad with fluorescent latent fingerprint powder -->
+        <rect x="130" y="45" width="140" height="195" rx="6" fill="#0a0a0a" stroke="#ff1e2d" stroke-width="2.5"/>
+        <rect x="145" y="60" width="110" height="34" fill="#030303" stroke="#222" stroke-width="1.5"/>
+        <text x="200" y="82" fill="#ff1e2d" font-family="'Courier New', monospace" font-size="15" text-anchor="middle" font-weight="bold" letter-spacing="4">****23:45</text>
+
+        <!-- Push Buttons with Smudge Highlights on 2, 4, 7, 8 -->
+        <g fill="#141414" stroke="#2b2b2b" stroke-width="1.5">
+          <rect x="145" y="105" width="28" height="26" rx="3"/>
+          <rect x="186" y="105" width="28" height="26" rx="3" fill="#220508" stroke="#ff1e2d"/>
+          <rect x="227" y="105" width="28" height="26" rx="3"/>
+
+          <rect x="145" y="138" width="28" height="26" rx="3" fill="#220508" stroke="#ff1e2d"/>
+          <rect x="186" y="138" width="28" height="26" rx="3"/>
+          <rect x="227" y="138" width="28" height="26" rx="3"/>
+
+          <rect x="145" y="171" width="28" height="26" rx="3" fill="#220508" stroke="#ff1e2d"/>
+          <rect x="186" y="171" width="28" height="26" rx="3" fill="#220508" stroke="#ff1e2d"/>
+          <rect x="227" y="171" width="28" height="26" rx="3"/>
+        </g>
+        <!-- Fluorescent Powder Dusting Smears -->
+        <ellipse cx="192" cy="118" rx="8" ry="6" fill="#ff1e2d" opacity="0.6"/>
+        <ellipse cx="152" cy="151" rx="9" ry="7" fill="#ff1e2d" opacity="0.6"/>
+        <ellipse cx="192" cy="184" rx="10" ry="7" fill="#ff1e2d" opacity="0.7"/>
+        
+
+  <!-- Forensic Tag Footer -->
+  <rect x="16" y="252" width="368" height="32" fill="#030303" stroke="#ff1e2d" stroke-width="1"/>
+  <text x="30" y="273" fill="#ffffff" font-family="'Courier New', monospace" font-size="11" font-weight="bold" letter-spacing="1">
+    EXHIBIT // KEYPAD LATENT SMEAR
+  </text>
+</svg>
